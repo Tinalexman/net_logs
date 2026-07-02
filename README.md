@@ -2,12 +2,6 @@ A Dio HTTP interceptor that captures all network traffic and serves a real-time 
 
 Open `http://localhost:8080` while your app runs and inspect every request: method, status, headers, payload, response body, timing, and more.
 
-## Screenshots
-
-| Card view                        | Response detail | Error view                      |
-|----------------------------------|---|---------------------------------|
-| ![](screenshots/error-view.jpeg) | ![](screenshots/response-detail.jpeg) | ![](screenshots/card-view.jpeg) |
-
 ## Features
 
 - **Dio interceptor** — drop-in `Interceptor` that captures requests, responses, and errors
@@ -23,14 +17,6 @@ Open `http://localhost:8080` while your app runs and inspect every request: meth
 ## Getting started
 
 Add `net_logs` to your `pubspec.yaml`:
-
-```yaml
-dependencies:
-  net_logs:
-    git: https://github.com/your-username/net_logs.git
-```
-
-Or after publishing:
 
 ```yaml
 dependencies:
@@ -116,51 +102,12 @@ When a name is set, it appears prominently in the table and detail panel instead
 | **Duration** | Request round-trip time |
 | **Time** | Local timestamp |
 
-Click any row to open the detail panel with three tabs:
+Click any row to open the detail panel with four tabs:
 
 - **Headers** — request URL, method, duration, all request/response headers
+- **Query Params** — formatted and syntax-highlighted query parameters
 - **Payload** — formatted and syntax-highlighted request body (JSON)
 - **Response** — formatted and syntax-highlighted response body (JSON)
-
-## API
-
-### `NetLogsInterceptor`
-
-| Member | Description |
-|---|---|
-| `enabled` | Whether logging is active |
-| `setEnabled(bool)` | Enable/disable at runtime |
-| `clear()` | Clear all captured logs |
-| `logs` | Unmodifiable list of captured `LogEntry` |
-| `logStream` | Broadcast stream of new `LogEntry` instances |
-| `dispose()` | Close the stream |
-
-### `NetLogsServer`
-
-| Member | Description |
-|---|---|
-| `start({int? port})` | Start the HTTP server |
-| `stop()` | Stop the server and disconnect all WebSocket clients |
-| `isRunning` | Whether the server is currently running |
-| `port` | The port the server is listening on |
-
-### `LogEntry`
-
-| Field | Type | Description |
-|---|---|---|
-| `id` | `int` | Auto-incrementing ID |
-| `timestamp` | `DateTime` | When the request was made |
-| `method` | `String` | HTTP method |
-| `url` | `String` | Full request URL |
-| `name` | `String?` | Optional friendly name from `extra['requestName']` |
-| `displayName` | `String` | `name ?? url` |
-| `requestHeaders` | `Map<String, String>` | Request headers |
-| `requestBody` | `String?` | Pretty-printed request body |
-| `statusCode` | `int?` | HTTP status code |
-| `responseHeaders` | `Map<String, String>?` | Response headers |
-| `responseBody` | `String?` | Pretty-printed response body |
-| `duration` | `Duration?` | Round-trip time |
-| `error` | `String?` | Error message if the request failed |
 
 ## Additional information
 
