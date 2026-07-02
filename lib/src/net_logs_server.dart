@@ -237,6 +237,10 @@ class NetLogsServer {
   }
   .log-card:active { background: var(--surface-hover); transform: scale(0.99); }
   .log-card.selected { border-color: var(--accent); background: rgba(124, 92, 255, 0.05); }
+  .log-card.card-2xx { border-left: 3px solid var(--success); }
+  .log-card.card-3xx { border-left: 3px solid var(--info); }
+  .log-card.card-4xx { border-left: 3px solid var(--warning); }
+  .log-card.card-5xx, .log-card.card-error { border-left: 3px solid var(--error); }
   
   .log-card-top { display: flex; align-items: center; gap: 8px; width: 100%; }
   .log-card-time { margin-left: auto; font-size: 11px; color: var(--text-faint); font-variant-numeric: tabular-nums; font-weight: 500; }
@@ -555,7 +559,14 @@ class NetLogsServer {
 
   function createCard(log) {
     const div = document.createElement('div');
-    div.className = 'log-card';
+    let cardClass = 'log-card';
+    if (log.statusCode) {
+      const cat = Math.floor(log.statusCode / 100);
+      cardClass += ' card-' + cat + 'xx';
+    } else if (log.error) {
+      cardClass += ' card-error';
+    }
+    div.className = cardClass;
     div.dataset.id = log.id;
 
     const url = new URL(log.url);

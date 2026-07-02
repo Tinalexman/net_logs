@@ -20,7 +20,7 @@ Add `net_logs` to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  net_logs: ^0.0.1
+  net_logs: ^0.0.4
 ```
 
 ## Usage
