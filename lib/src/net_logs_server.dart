@@ -505,16 +505,20 @@ class NetLogsServer {
   }
 
   function statusBadgeHtml(log) {
-    if (log.error) return '<span class="status-badge status-error">ERR</span>';
     if (log.statusCode) {
       const cat = Math.floor(log.statusCode / 100);
       return '<span class="status-badge status-' + cat + 'xx">' + log.statusCode + '</span>';
     }
+    if (log.error) return '<span class="status-badge status-error">ERR</span>';
     return '<span class="status-badge status-pending">&hellip;</span>';
   }
 
   function matchesFilter(log, val) {
-    return !val || log.url.toLowerCase().includes(val);
+    if (!val) return true;
+    const lower = val.toLowerCase();
+    if (log.url.toLowerCase().includes(lower)) return true;
+    if (log.name && log.name.toLowerCase().includes(lower)) return true;
+    return false;
   }
 
   function createRow(log) {
@@ -637,17 +641,17 @@ class NetLogsServer {
       payloadEl.innerHTML = '<div class="empty-state"><div class="text">No request body</div></div>';
     }
 
-    // Response
+    // Response / Error tab
+    const responseTabBtn = document.querySelector('.detail-tabs button[data-tab="response"]');
+    const isError = !!log.error;
+    responseTabBtn.textContent = isError ? 'Error' : 'Response';
+
     const responseEl = document.getElementById('panel-response');
-    if (log.error && log.responseBody) {
-      responseEl.innerHTML =
-        '<pre style="color:var(--error);padding:8px 16px 4px;border-bottom:1px solid var(--border-subtle);margin-bottom:4px">' + escapeHtml(log.error) + '</pre>' +
-        '<button class="copy-btn" onclick="copyText(this, \'' + escapeJs(log.responseBody) + '\')">Copy</button><pre>' + formatJson(log.responseBody) + '</pre>';
-    } else if (log.error) {
-      responseEl.innerHTML = '<pre style="color:var(--error);padding:14px 16px">' + escapeHtml(log.error) + '</pre>';
-    } else if (log.responseBody) {
+    if (log.responseBody) {
       const formatted = formatJson(log.responseBody);
       responseEl.innerHTML = '<button class="copy-btn" onclick="copyText(this, \'' + escapeJs(log.responseBody) + '\')">Copy</button><pre>' + formatted + '</pre>';
+    } else if (log.error) {
+      responseEl.innerHTML = '<pre style="color:var(--error);padding:14px 16px">' + escapeHtml(log.error) + '</pre>';
     } else {
       responseEl.innerHTML = '<div class="empty-state"><div class="text">No response body</div></div>';
     }

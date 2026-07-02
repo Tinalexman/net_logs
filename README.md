@@ -102,12 +102,11 @@ When a name is set, it appears prominently in the table and detail panel instead
 | **Duration** | Request round-trip time |
 | **Time** | Local timestamp |
 
-Click any row to open the detail panel with four tabs:
+Click any row to open the detail panel with three tabs:
 
 - **Headers** — request URL, method, duration, all request/response headers
-- **Query Params** — formatted and syntax-highlighted query parameters
 - **Payload** — formatted and syntax-highlighted request body (JSON)
-- **Response** — formatted and syntax-highlighted response body (JSON)
+- **Response/Error** — formatted and syntax-highlighted response body (JSON)
 
 ## Additional information
 
