@@ -7,6 +7,7 @@ class LogEntry {
   final String url;
   final String? name;
   final Map<String, String> requestHeaders;
+  final Map<String, String> queryParameters;
   final String? requestBody;
   final int? statusCode;
   final Map<String, String>? responseHeaders;
@@ -21,6 +22,7 @@ class LogEntry {
     required this.url,
     this.name,
     required this.requestHeaders,
+    this.queryParameters = const {},
     this.requestBody,
     this.statusCode,
     this.responseHeaders,
@@ -39,6 +41,7 @@ class LogEntry {
       'url': url,
       'name': name,
       'requestHeaders': requestHeaders,
+      'queryParameters': queryParameters,
       'requestBody': _tryFormatBody(requestBody),
       'statusCode': statusCode,
       'responseHeaders': responseHeaders,

@@ -606,6 +606,15 @@ class NetLogsServer {
     h += '<tr><td>Request URL</td><td style="word-break:break-all">' + escapeHtml(log.url) + '</td></tr>';
     h += '<tr><td>Request Method</td><td><span class="method-badge method-' + log.method.toLowerCase() + '">' + log.method + '</span></td></tr>';
     if (log.durationMs != null) h += '<tr><td>Duration</td><td>' + log.durationMs + ' ms</td></tr>';
+
+    const qp = log.queryParameters;
+    if (qp && Object.keys(qp).length > 0) {
+      h += '<tr class="section-header"><td colspan="2">Query Parameters</td></tr>';
+      for (const [k, v] of Object.entries(qp)) {
+        h += '<tr><td>' + escapeHtml(k) + '</td><td style="word-break:break-all">' + escapeHtml(v) + '</td></tr>';
+      }
+    }
+
     h += '<tr class="section-header"><td colspan="2">Request Headers</td></tr>';
     for (const [k, v] of Object.entries(log.requestHeaders || {})) {
       h += '<tr><td>' + escapeHtml(k) + '</td><td style="word-break:break-all">' + escapeHtml(v) + '</td></tr>';
@@ -630,7 +639,11 @@ class NetLogsServer {
 
     // Response
     const responseEl = document.getElementById('panel-response');
-    if (log.error) {
+    if (log.error && log.responseBody) {
+      responseEl.innerHTML =
+        '<pre style="color:var(--error);padding:8px 16px 4px;border-bottom:1px solid var(--border-subtle);margin-bottom:4px">' + escapeHtml(log.error) + '</pre>' +
+        '<button class="copy-btn" onclick="copyText(this, \'' + escapeJs(log.responseBody) + '\')">Copy</button><pre>' + formatJson(log.responseBody) + '</pre>';
+    } else if (log.error) {
       responseEl.innerHTML = '<pre style="color:var(--error);padding:14px 16px">' + escapeHtml(log.error) + '</pre>';
     } else if (log.responseBody) {
       const formatted = formatJson(log.responseBody);

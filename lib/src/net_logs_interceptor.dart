@@ -35,6 +35,7 @@ class NetLogsInterceptor extends Interceptor {
       url: options.uri.toString(),
       name: options.extra['requestName'] as String?,
       requestHeaders: options.headers.map((k, v) => MapEntry(k, '$v')),
+      queryParameters: options.queryParameters.map((k, v) => MapEntry(k, '$v')),
       requestBody: _getRequestBody(options),
     );
 
@@ -60,6 +61,7 @@ class NetLogsInterceptor extends Interceptor {
       url: entry.url,
       name: entry.name,
       requestHeaders: entry.requestHeaders,
+      queryParameters: entry.queryParameters,
       requestBody: entry.requestBody,
       statusCode: response.statusCode,
       responseHeaders: _headersToMap(response.headers.map),
@@ -89,6 +91,7 @@ class NetLogsInterceptor extends Interceptor {
       url: entry.url,
       name: entry.name,
       requestHeaders: entry.requestHeaders,
+      queryParameters: entry.queryParameters,
       requestBody: entry.requestBody,
       statusCode: err.response?.statusCode,
       responseHeaders: err.response != null ? _headersToMap(err.response!.headers.map) : null,
