@@ -24,7 +24,19 @@ class _NetLogsExampleAppState extends State<NetLogsExampleApp> {
   @override
   void initState() {
     super.initState();
-    _server = NetLogsServer(interceptor: _interceptor);
+    _server = NetLogsServer(
+      interceptor: _interceptor,
+      onStarted: (port) {
+        if (!mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Net Logs dashboard at http://localhost:$port'),
+            behavior: SnackBarBehavior.floating,
+            duration: const Duration(seconds: 4),
+          ),
+        );
+      },
+    );
     _dio = Dio()..interceptors.add(_interceptor);
   }
 
@@ -36,8 +48,15 @@ class _NetLogsExampleAppState extends State<NetLogsExampleApp> {
   }
 
   Future<void> _startServer() async {
-    await _server.start();
-    setState(() => _serverRunning = true);
+    try {
+      await _server.start();
+      setState(() => _serverRunning = true);
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to start server: $e')),
+      );
+    }
   }
 
   Future<void> _stopServer() async {

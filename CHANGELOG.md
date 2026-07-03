@@ -9,3 +9,6 @@
 
 ## 0.0.4
 * Improved on the visuals of the card for requests that errored out.
+
+## 0.0.5
+* Fixed the issue that caused app to start if the current port is in use by another process

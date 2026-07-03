@@ -20,7 +20,7 @@ Add `net_logs` to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  net_logs: ^0.0.4
+  net_logs: ^0.0.5
 ```
 
 ## Usage
@@ -63,6 +63,21 @@ if (kDebugMode) await server.start();
 
 ```dart
 await server.start(port: 3000);
+```
+
+### Auto port selection
+
+If the requested port is busy, the server automatically tries the next available port (up to 100 attempts). You can listen for the actual port via the `onStarted` callback:
+
+```dart
+final server = NetLogsServer(
+  interceptor: interceptor,
+  onStarted: (port) {
+    print('Dashboard at http://localhost:$port');
+    // Show a SnackBar, toast, or notification
+  },
+);
+await server.start(); // starts on 8080, or 8081, etc.
 ```
 
 ### Stop the server

@@ -1,6 +1,6 @@
 name: net_logs
 description: A Dio HTTP interceptor that captures network traffic and serves a real-time web UI dashboard.
-version: 0.0.4
+version: 0.0.5
 homepage: https://github.com/Tinalexman/net_logs
 repository: https://github.com/Tinalexman/net_logs
 issue_tracker: https://github.com/Tinalexman/net_logs/issues
@@ -16,7 +16,7 @@ dependencies:
   dio: '>=5.4.0 <6.0.0'
   shelf: '^1.4.1'
   web_socket_channel: '>=2.4.0 <4.0.0'
-  shelf_web_socket: '>=1.0.0 <3.0.0'
+  shelf_web_socket: '>=1.0.0 <=3.0.0'
 
 dev_dependencies:
   flutter_test:

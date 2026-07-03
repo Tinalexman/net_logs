@@ -13,12 +13,15 @@ class NetLogsServer {
   int _port;
   bool _isRunning = false;
   final List<WebSocketChannel> _clients = [];
+  void Function(int port)? _onStarted;
 
   NetLogsServer({
     required NetLogsInterceptor interceptor,
     int port = 8080,
+    void Function(int port)? onStarted,
   })  : _interceptor = interceptor,
-        _port = port;
+        _port = port,
+        _onStarted = onStarted;
 
   bool get isRunning => _isRunning;
   int get port => _port;
@@ -31,10 +34,24 @@ class NetLogsServer {
         .addMiddleware(shelf.logRequests())
         .addHandler(_router);
 
-    _server = await shelf_io.serve(handler, InternetAddress.loopbackIPv4, _port);
-    _isRunning = true;
-
-    _interceptor.logStream.listen(_broadcastLog);
+    final maxAttempts = 100;
+    for (int i = 0; i < maxAttempts; i++) {
+      try {
+        _server = await shelf_io.serve(
+          handler,
+          InternetAddress.loopbackIPv4,
+          _port + i,
+        );
+        if (i > 0) _port = _port + i;
+        _isRunning = true;
+        _interceptor.logStream.listen(_broadcastLog);
+        _onStarted?.call(_port);
+        return;
+      } on SocketException catch (_) {
+        continue;
+      }
+    }
+    throw StateError('Could not find an available port after $maxAttempts attempts.');
   }
 
   Future<void> stop() async {
